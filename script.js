@@ -178,5 +178,7 @@ board.map(number_to_class).forEach(class_name => {
   item.classList.add(class_name);
   list.append(item);
 });
+
+console.log(expanded_patterns);
   
 })();
