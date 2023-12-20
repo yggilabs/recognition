@@ -173,7 +173,7 @@ for(let i = 0; i < 100; i++) {
 const number_to_class = n => ["white","blue","violet","magenta","orange","yellow","black"][n];
 const list = document.getElementById("board");
 
-board.forEach(class_name => {
+board.map(number_to_class).forEach(class_name => {
   const item = document.createElement("li");
   item.classList.add(class_name);
   list.append(item);
