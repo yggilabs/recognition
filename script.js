@@ -128,9 +128,11 @@ const next_board = board => {
     return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
   }
 
-	
   const calculate_bias = pattern => (new Set([pattern.nw, pattern.ne, pattern.sw, pattern.se])).size
-  const add_bias = match => match.bias = calculate_bias(match)
+  const add_bias = match => {
+    match.bias = calculate_bias(match);
+    return match;
+  }
   const sort_bias_desc = (a, b) => b.bias - a.bias;
 	
   const has_entropy = a => a.entropy > 0;
@@ -138,7 +140,7 @@ const next_board = board => {
   const calculate_entropy = frame => {
     const matches = expanded_patterns.filter(matches_frame(frame));
     frame.entropy = matches.length;
-    frame.match = matches.map(add_bias).sort(sort_bias_desc)[0];
+    frame.match = matches.sort(sort_bias_desc)[0];
     return frame;
   };
   
@@ -156,7 +158,7 @@ const next_board = board => {
   return board;
 }
 
-const expanded_patterns = base_patterns.flatMap(expand_pattern_color).flatMap(expand_pattern_rotate)
+const expanded_patterns = base_patterns.flatMap(expand_pattern_color).flatMap(expand_pattern_rotate).map(add_bias);
 
 let board = [
   6,6,6,0,0,0,0,6,6,6,
