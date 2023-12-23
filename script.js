@@ -165,7 +165,7 @@ const next_board = board => {
   const calculate_entropy = frame => {
     const matches = expanded_patterns.filter(matches_frame(frame));
     frame.entropy = matches.length;
-    frame.match = matches.sort(sort_bias_desc)[getRandom(0,matches.length / 10)];
+    frame.match = matches.sort(sort_bias_desc)[0];
     return frame;
   };
   
