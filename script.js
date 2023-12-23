@@ -189,14 +189,34 @@ const add_bias = match => {
   return match;
 }
 
-const expanded_patterns = base_patterns.flatMap(expand_pattern_color).flatMap(expand_pattern_rotate).map(add_bias);
+let expanded_patterns = base_patterns.flatMap(expand_pattern_color).flatMap(expand_pattern_rotate).map(add_bias);
 
 const selections = new Array(base_patterns.length);
+
+function shuffle(array) {
+  let currentIndex = array.length,  randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex > 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
+
 
 let board = base_board;
 
 for(let i = 0; i < 100; i++) {
-  board = next_board(board)
+  expanded_patterns = shuffle(expanded_patterns);
+  board = next_board(board);
 }
 
 const number_to_class = n => ["white","blue","violet","magenta","orange","yellow","black"][n];
