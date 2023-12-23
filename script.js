@@ -13,15 +13,18 @@ const params = new URLSearchParams(document.location.search);
 
 // parse url params for pattern definitions
 const base_patterns = params.get("patterns").split("").reduce((a,c) => {
-  console.log(a);
-  if(a[-1] === undefined || a[-1].length == 4) return a.push([c]);
-  return a[-1].push([c]);  
-},[]).map(a => {
+  a.c.push(c)
+  if(a.c.length == 4) {
+    a.a.push(a.c)
+    a.c = [];
+  }
+  return a;
+},{a:[],c:[]}).a.map(a => {
   return {
-    nw: a[1],
-    ne: a[2],
-    sw: a[3],
-    se: a[4],
+    nw: a[0],
+    ne: a[1],
+    sw: a[2],
+    se: a[3],
   };
 });
 
