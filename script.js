@@ -27,9 +27,9 @@ const base_patterns = params.get("patterns").split("").reduce((a,c) => {
 console.log(base_patterns);
 
 // parse url for board
-const board =params.get("board").split("");
+const base_board =params.get("board").split("");
 
-console.log(board);
+console.log(base_board);
 
 /*
 // pattern definitions
@@ -188,18 +188,8 @@ const add_bias = match => {
 
 const expanded_patterns = base_patterns.flatMap(expand_pattern_color).flatMap(expand_pattern_rotate).map(add_bias);
 
-let board = [
-  6,6,6,0,0,0,0,6,6,6,
-  6,6,0,0,0,0,0,0,6,6,
-  6,0,0,0,2,0,0,4,0,6,
-  0,3,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,1,0,0,0,
-  0,0,0,3,0,0,0,0,2,0,
-  0,0,0,0,0,0,0,0,0,0,
-  6,0,0,0,0,0,0,4,0,6,
-  6,6,0,5,0,0,0,0,6,6,
-  6,6,6,0,0,0,0,6,6,6
-];
+
+let board = base_board;
 
 for(let i = 0; i < 100; i++) {
   board = next_board(board)
