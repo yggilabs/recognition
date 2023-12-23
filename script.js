@@ -15,7 +15,7 @@ const params = new URLSearchParams(document.location.search);
 const base_patterns = params.get("patterns").split("").reduce((a,c) => {
   console.log(a);
   if(a[-1] === undefined || a[-1].length == 4) return a.push([c]);
-  return a[-1].push(c);  
+  return a[-1].push([c]);  
 },[]).map(a => {
   return {
     nw: a[1],
