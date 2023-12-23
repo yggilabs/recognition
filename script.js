@@ -7,7 +7,27 @@ const COLOR_UNKNOWN = -1,
 	COLOR_MAGENTA = 3,
 	COLOR_ORANGE = 4,
 	COLOR_YELLOW = 5;
-	
+
+
+const params = new URLSearchParams(document.location.search);
+
+// parse url params for pattern definitions
+const base_patterns = params.get("patterns").split("").reduce((a,c) => {
+  if(a[-1] === undefined || a[-1].length == 4) return a.push([c]);
+  return a[-1].push(c);  
+},[]).map(a => {
+  return {
+    nw: a[1],
+    ne: a[2],
+    sw: a[3],
+    se: a[4],
+  };
+});
+
+// parse url for board
+const board =params.get("board").split("");
+
+/*
 // pattern definitions
 const base_patterns = [
 	{
@@ -23,6 +43,9 @@ const base_patterns = [
 		se: COLOR_BLUE
 	}
 ];
+
+?patterns=01430521&board=6660000666660000006660002004060300000000000000100000030000200000000000600000040666050000666660000666
+*/
 
 // rotate a pattern "clockwise"
 const rotate_pattern = pattern => {
