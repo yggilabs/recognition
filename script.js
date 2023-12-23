@@ -24,8 +24,12 @@ const base_patterns = params.get("patterns").split("").reduce((a,c) => {
   };
 });
 
+console.log(base_patterns);
+
 // parse url for board
 const board =params.get("board").split("");
+
+console.log(board);
 
 /*
 // pattern definitions
