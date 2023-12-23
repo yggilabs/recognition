@@ -19,8 +19,9 @@ const base_patterns = params.get("patterns").split("").reduce((a,c) => {
     a.c = [];
   }
   return a;
-},{a:[],c:[]}).a.map(a => {
+},{a:[],c:[]}).a.map((a,i) => {
   return {
+    id: i,
     nw: a[0],
     ne: a[1],
     sw: a[2],
@@ -28,12 +29,8 @@ const base_patterns = params.get("patterns").split("").reduce((a,c) => {
   };
 });
 
-console.log(base_patterns);
-
 // parse url for board
 const base_board =params.get("board").split("");
-
-console.log(base_board);
 
 /*
 // pattern definitions
@@ -58,6 +55,7 @@ const base_patterns = [
 // rotate a pattern "clockwise"
 const rotate_pattern = pattern => {
 	return {
+    id: pattern.id,
 		nw: pattern.sw, 
 		ne: pattern.nw,
 		sw: pattern.se,
@@ -68,6 +66,7 @@ const rotate_pattern = pattern => {
 // recolor the nw color. assuming that nw color is COLOR_UNKNOWN
 const color_pattern = (color, pattern) => {
   return {
+    id: pattern.id,
     nw: color, 
     ne: pattern.ne,
     sw: pattern.sw,
@@ -159,27 +158,27 @@ const next_board = board => {
     return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
   }
 
-  const sort_bias_desc = (a, b) => b.bias - a.bias;
+  const sort_bias_desc = (a, b) => selections[b.id] - selections[a.id];
 	
   const has_entropy = a => a.entropy > 0;
   const sort_entropy_asc = (a, b) => a.entropy - b.entropy;
   const calculate_entropy = frame => {
     const matches = expanded_patterns.filter(matches_frame(frame));
     frame.entropy = matches.length;
-    frame.match = matches.sort(sort_bias_desc)[getRandom(0,matches.length / 2)];
+    frame.match = matches.sort(sort_bias_desc)[getRandom(0,matches.length / 10)];
     return frame;
   };
   
   const selected = frames.map(calculate_entropy).filter(has_entropy).sort(sort_entropy_asc)[0];
 
   if(selected === undefined) return board;
-
-  console.log(selected.match)
   
   board[selected.nw.index] = selected.match.nw;
   board[selected.ne.index] = selected.match.ne;
   board[selected.sw.index] = selected.match.sw;
   board[selected.se.index] = selected.match.se;
+
+  selections[selected.id] = (selections[selected.id] || 0) + 1;
 
   return board;
 }
@@ -192,6 +191,7 @@ const add_bias = match => {
 
 const expanded_patterns = base_patterns.flatMap(expand_pattern_color).flatMap(expand_pattern_rotate).map(add_bias);
 
+const selections = new Array(base_patterns.length);
 
 let board = base_board;
 
