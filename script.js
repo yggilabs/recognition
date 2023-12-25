@@ -179,7 +179,7 @@ const next_board = board => {
   board[selected.sw.index] = selected.match.sw;
   board[selected.se.index] = selected.match.se;
 
-  selections[selected.id] = (selections[selected.id] || 0) + 1;
+  selections[selected.match.id] = (selections[selected.match.id] || 0) + 1;
 
   return board;
 }
