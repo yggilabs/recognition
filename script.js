@@ -49,7 +49,7 @@ const base_patterns = [
 	}
 ];
 
-?patterns=01430521&board=6660000666660000006660002004060300000000000000100000030000200000000000600000040666050000666660000666
+https://yggilabs.github.io/recognition/?patterns=1523225133555211411211412322524453121154&board=6660000666660000006660002004060300000000000000100000030000200000000000600000040666050000666660000666
 */
 
 // rotate a pattern "clockwise"
@@ -169,7 +169,8 @@ const next_board = board => {
     return frame;
   };
   
-  const selected = frames.map(calculate_entropy).filter(has_entropy).sort(sort_entropy_asc)[0];
+  const candidates = frames.map(calculate_entropy).filter(has_entropy).sort(sort_entropy_asc);
+  const selected = candidates[0];
 
   if(selected === undefined) return board;
   
@@ -228,6 +229,7 @@ board.map(number_to_class).forEach(class_name => {
   list.append(item);
 });
 
+console.log(selected);
 console.log(expanded_patterns);
   
 })();
