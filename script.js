@@ -229,7 +229,7 @@ board.map(number_to_class).forEach(class_name => {
   list.append(item);
 });
 
-console.log(selected);
+console.log(selections);
 console.log(expanded_patterns);
   
 })();
