@@ -1,6 +1,6 @@
 (() => {
 // color definitions
-const COLOR_UNKNOWN = -1, 
+const COLOR_UNKNOWN = 6, 
 	COLOR_NONE = 0, 
 	COLOR_BLUE = 1,
 	COLOR_VIOLET = 2,
@@ -34,6 +34,12 @@ const base_board = params.get("board").split("").map(i => parseInt(i));
 
 const BOARD_WIDTH = parseInt(params.get("width"));
 const BOARD_HEIGHT = parseInt(params.get("height"));
+
+
+const root = document.querySelector(':root');
+
+root.style.setProperty('--column-count', BOARD_WIDTH);
+root.style.setProperty('--row-count', BOARD_HEIGHT);
 /*
 https://yggilabs.github.io/recognition/?patterns=1523225133555211411211412322524453121154&board=6660000666660000006660002004060300000000000000100000030000200000000000600000040666050000666660000666
 */
@@ -56,7 +62,7 @@ const color_pattern = (color, pattern) => {
     nw: color, 
     ne: pattern.ne,
     sw: pattern.sw,
-    se: pattern.ne
+    se: pattern.se
   };
 };
 
@@ -188,6 +194,8 @@ const add_bias = match => {
 
 let expanded_patterns = base_patterns.flatMap(expand_pattern_color).flatMap(expand_pattern_rotate).map(add_bias);
 
+const feature_patterns = base_patterns.map(pattern => color_pattern(COLOR_UNKNOWN, pattern));
+
 const selections = new Array(base_patterns.length);
 
 function shuffle(array) {
@@ -217,14 +225,30 @@ for(let i = 0; i < 200; i++) {
 }
 
 const number_to_class = n => ["white","blue","violet","magenta","orange","yellow","black"][n];
-const list = document.getElementById("board");
+const board_element = document.getElementById("board");
+const features_element = document.getElementById("features");
 
 
-board.map(number_to_class).forEach(class_name => {
+board.map(n => n == 6 ? 0 : n).map(number_to_class).forEach(class_name => {
   const item = document.createElement("li");
   item.classList.add(class_name);
-  list.append(item);
+  board_element.append(item);
 });
+
+feature_patterns.map(p => {
+	const ol = document.createElement("ol");
+	const li = document.createElement("li");
+	ol.classList.add("feature");
+	
+	[p.nw, p.ne, p.sw, p.se].map(number_to_class).forEach(class_name => {
+	  const item = document.createElement("li");
+	  item.classList.add(class_name);
+	  ol.append(item);
+	});
+	console.log([p.nw, p.ne, p.sw, p.se]);
+	li.append(ol);
+	features_element.append(li);
+})
 
 console.log(selections);
 console.log(expanded_patterns);
