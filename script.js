@@ -13,7 +13,7 @@ const params = new URLSearchParams(document.location.search);
 
 // parse url params for pattern definitions
 const base_patterns = params.get("patterns").split("").reduce((a,c) => {
-  a.c.push(c)
+  a.c.push(parseInt(c))
   if(a.c.length == 4) {
     a.a.push(a.c)
     a.c = [];
@@ -30,25 +30,11 @@ const base_patterns = params.get("patterns").split("").reduce((a,c) => {
 });
 
 // parse url for board
-const base_board =params.get("board").split("");
+const base_board = params.get("board").split("").map(i => parseInt(i));
 
+const BOARD_WIDTH = parseInt(params.get("width"));
+const BOARD_HEIGHT = parseInt(params.get("height"));
 /*
-// pattern definitions
-const base_patterns = [
-	{
-		nw: COLOR_UNKNOWN, 
-		ne: COLOR_BLUE,
-		sw: COLOR_ORANGE,
-		se: COLOR_MAGENTA
-	},
-	{
-		nw: COLOR_UNKNOWN, 
-		ne: COLOR_YELLOW,
-		sw: COLOR_VIOLET,
-		se: COLOR_BLUE
-	}
-];
-
 https://yggilabs.github.io/recognition/?patterns=1523225133555211411211412322524453121154&board=6660000666660000006660002004060300000000000000100000030000200000000000600000040666050000666660000666
 */
 
@@ -89,16 +75,11 @@ const expand_pattern_rotate = pattern => {
 	return rotations;
 };
 
-
-
-BOARD_WIDTH = 10;
-BOARD_HEIGHT = 10;
-
 const next_board = board => {
   const frames = []
   
-  for(let i = 0; i < BOARD_WIDTH - 1; i++) {
-    for(let j = 0; j < BOARD_HEIGHT - 1; j++) {
+  for(let i = 0; i < BOARD_HEIGHT - 1; i++) {
+    for(let j = 0; j < BOARD_WIDTH - 1; j++) {
       // calculate positions
       const nw_index = (BOARD_WIDTH*i)+j;
       const ne_index = nw_index + 1;
@@ -158,28 +139,43 @@ const next_board = board => {
     return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
   }
 
-  const sort_bias_desc = (a, b) => selections[b.id] - selections[a.id];
+  const sort_bias_desc = (a, b) => {	  
+	return (selections[a.id] || 0) - (selections[b.id] || 0);
+  }
 	
   const has_entropy = a => a.entropy > 0;
   const sort_entropy_asc = (a, b) => a.entropy - b.entropy;
   const calculate_entropy = frame => {
     const matches = expanded_patterns.filter(matches_frame(frame));
-    frame.entropy = matches.length;
-    frame.match = matches.sort(sort_bias_desc)[0];
+	frame.matches = matches;
+    frame.entropy = matches.length;	
     return frame;
   };
   
   const candidates = frames.map(calculate_entropy).filter(has_entropy).sort(sort_entropy_asc);
-  const selected = candidates[0];
+    const selected = candidates[0];
 
   if(selected === undefined) return board;
+    
+  const matches = shuffle(selected.matches).sort(sort_bias_desc);
+  const match = matches[0];
+     
+  nw_index = selected.nw.index;
+  ne_index = selected.ne.index;
+  sw_index = selected.sw.index;
+  se_index = selected.se.index;
   
-  board[selected.nw.index] = selected.match.nw;
-  board[selected.ne.index] = selected.match.ne;
-  board[selected.sw.index] = selected.match.sw;
-  board[selected.se.index] = selected.match.se;
+  nw_value = match.nw;
+  ne_value = match.ne;
+  sw_value = match.sw;
+  se_value = match.se;
+  
+  board[nw_index] = nw_value;
+  board[ne_index] = ne_value;
+  board[sw_index] = sw_value;
+  board[se_index] = se_value;
 
-  selections[selected.match.id] = (selections[selected.match.id] || 0) + 1;
+  selections[match.id] = 1 + (selections[match.id] || 0);
 
   return board;
 }
@@ -215,13 +211,14 @@ function shuffle(array) {
 
 let board = base_board;
 
-for(let i = 0; i < 100; i++) {
+for(let i = 0; i < 200; i++) {
   expanded_patterns = shuffle(expanded_patterns);
   board = next_board(board);
 }
 
 const number_to_class = n => ["white","blue","violet","magenta","orange","yellow","black"][n];
 const list = document.getElementById("board");
+
 
 board.map(number_to_class).forEach(class_name => {
   const item = document.createElement("li");
