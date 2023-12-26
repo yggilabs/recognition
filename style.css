@@ -14,7 +14,7 @@ ol, li {
 }
 
 .page {
-  break-before: always;
+  break-before: page;
 }
 
 #features {
