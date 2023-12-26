@@ -9,6 +9,10 @@ ol, li {
   padding: 0;
 }
 
+.page {
+  break-before: always;
+}
+
 #features {
   display: grid;
   gap: var(--size);
