@@ -4,7 +4,7 @@
 	--column-count: 0;
 }
 
-#feature {
+#features {
   display: grid;
   gap: var(--size);
   grid-template-rows: repeat(4, calc(var(--size) * 2 + 2px));
