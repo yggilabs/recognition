@@ -32,14 +32,16 @@ const base_patterns = params.get("patterns").split("").reduce((a,c) => {
 // parse url for board
 const base_board = params.get("board").split("").map(i => parseInt(i));
 
-const BOARD_WIDTH = parseInt(params.get("width"));
-const BOARD_HEIGHT = parseInt(params.get("height"));
-
+const BOARD_WIDTH = parseInt(params.get("width")) || 10;
+const BOARD_HEIGHT = parseInt(params.get("height")) || 10;
+const cell_size = parseInt(params.get("size")) || 40;
 
 const root = document.querySelector(':root');
 
 root.style.setProperty('--column-count', BOARD_WIDTH);
 root.style.setProperty('--row-count', BOARD_HEIGHT);
+root.style.setProperty('--size', cell_size);
+
 /*
 https://yggilabs.github.io/recognition/?patterns=1523225133555211411211412322524453121154&board=6660000666660000006660002004060300000000000000100000030000200000000000600000040666050000666660000666
 */

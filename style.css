@@ -1,21 +1,28 @@
 :root {
-	--unit: 50px;
+	--size: 0;
 	--row-count: 0;
 	--column-count: 0;
+}
+
+#feature {
+  display: grid;
+  gap: var(--size);
+  grid-template-rows: repeat(4, calc(var(--size) * 2 + 2px));
+  grid-template-rows: repeat(5, calc(var(--size) * 2 + 2px));
 }
 
 #board {
   display: grid;
   gap: 2px;
-  grid-template-rows: repeat(var(--row-count), var(--unit));
-  grid-template-columns: repeat(var(--column-count), var(--unit));
+  grid-template-rows: repeat(var(--row-count), var(--size));
+  grid-template-columns: repeat(var(--column-count), var(--size));
 }
 
 .feature {
-    display: grid;
-	gap: 2px;
-    grid-template-rows: repeat(2, var(--unit));
-    grid-template-columns: repeat(2, var(--unit));
+  display: grid;
+  gap: 2px;
+  grid-template-rows: repeat(2, var(--size));
+  grid-template-columns: repeat(2, var(--size));
 }
 
 li {
