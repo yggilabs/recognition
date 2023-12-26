@@ -4,11 +4,16 @@
 	--column-count: 0;
 }
 
+ol, li {
+  margin: 0;
+  padding: 0;
+}
+
 #features {
   display: grid;
   gap: var(--size);
   grid-template-rows: repeat(4, calc(var(--size) * 2 + 2px));
-  grid-template-rows: repeat(5, calc(var(--size) * 2 + 2px));
+  grid-template-columns: repeat(3, calc(var(--size) * 2 + 2px));
 }
 
 #board {
