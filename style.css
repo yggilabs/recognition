@@ -9,6 +9,10 @@ ol, li {
   padding: 0;
 }
 
+@page {
+  size: A4;
+}
+
 .page {
   break-before: always;
 }
