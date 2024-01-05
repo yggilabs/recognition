@@ -43,9 +43,9 @@ const base_board = params.get("board").split("").map(i => parseInt(i));
 const board_width = parseInt(params.get("width")) || 10;
 const board_height = parseInt(params.get("height")) || 10;
 const cell_size = parseInt(params.get("size")) || 20;
-const random_seed = params.get("seed");
+const random_seed = params.get("seed") || Math.floor(99999999*Math.random());
 
-const random = random_seed === undefined ? new Math.seedrandom() : new Math.seedrandom(random_seed); // use seed param for deterministic mode or local entropy for non-deterministic mode
+const random = new Math.seedrandom(random_seed); // use seed param for deterministic mode or local entropy for non-deterministic mode
 
 const root = document.querySelector(':root');
 
@@ -224,6 +224,17 @@ const shuffle = array => {
   return array;
 }
 
+const number_to_class = n => ["white","blue","violet","magenta","orange","yellow","black"][n];
+const board_element = document.getElementById("board");
+const features_element = document.getElementById("features");
+
+const append_item = element => {
+  return class_name => {
+    const item = document.createElement("li");
+    item.classList.add(class_name);
+    element.append(item);
+  };
+};
 
 let board = base_board;
 
@@ -233,16 +244,7 @@ for(let i = 0; i < 200; i++) {
   board = next_board(board);
 }
 
-const number_to_class = n => ["white","blue","violet","magenta","orange","yellow","black"][n];
-const board_element = document.getElementById("board");
-const features_element = document.getElementById("features");
-
-
-board.map(n => n == 6 ? 0 : n).map(number_to_class).forEach(class_name => {
-  const item = document.createElement("li");
-  item.classList.add(class_name);
-  board_element.append(item);
-});
+board.map(n => n == 6 ? 0 : n).map(number_to_class).forEach(append_item(board_element));
 
 feature_patterns.map(p => {
 	const ol = document.createElement("ol");
@@ -254,12 +256,21 @@ feature_patterns.map(p => {
 	  item.classList.add(class_name);
 	  ol.append(item);
 	});
-	console.log([p.nw, p.ne, p.sw, p.se]);
 	li.append(ol);
 	features_element.append(li);
 })
 
-console.log(id_counter);
-console.log(expanded_patterns);
-  
+const color_counter = feature_patterns.reduce((a,c) => {
+  a[c.ne] = (a[c.ne] || 0) + 1;
+  a[c.sw] = (a[c.sw] || 0) + 1;
+  a[c.se] = (a[c.se] || 0) + 1;
+  return a;
+},[]);  
+
+console.log(`seed: ${random_seed}`);
+console.log(`pattern_id_counts: ${id_counter}`);  
+console.log(`pattern_id_count_min: ${Math.min(...id_counter)}`);
+console.log(`pattern_id_count_max: ${Math.max(...id_counter)}`);
+console.log(`pattern_color_counts: ${color_counter}`);
+
 })();
