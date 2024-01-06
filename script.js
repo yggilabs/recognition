@@ -43,7 +43,7 @@ const base_board = params.get("board").split("").map(i => parseInt(i));
 const board_width = parseInt(params.get("width")) || 10;
 const board_height = parseInt(params.get("height")) || 10;
 const cell_size = parseInt(params.get("size")) || 20;
-const random_seed = params.get("seed") || `${Math.floor(99999999*Math.random()}`);
+const random_seed = params.get("seed") || `${Math.floor(99999999*Math.random())}`;
 
 const random = new Math.seedrandom(random_seed); // use seed param for deterministic mode or local entropy for non-deterministic mode
 
